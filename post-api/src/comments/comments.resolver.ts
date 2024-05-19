@@ -1,13 +1,25 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Parent,
+  ResolveField,
+} from '@nestjs/graphql';
 import { CommentsService } from './comments.service';
 import { CreateCommentInput } from './dto/create-comment.input';
 import { UpdateCommentInput } from './dto/update-comment.input';
 import { Comment } from './entities/comment.entity';
 import { StatusResponse } from 'src/status-response.type';
+import { User } from 'src/graphql';
+import { UsersService } from 'src/users/users.service';
 
 @Resolver('Comment')
 export class CommentsResolver {
-  constructor(private readonly commentService: CommentsService) {}
+  constructor(
+    private readonly commentService: CommentsService,
+    private readonly userService: UsersService,
+  ) {}
 
   @Query(() => [Comment])
   async comments(): Promise<Comment[]> {
@@ -42,5 +54,10 @@ export class CommentsResolver {
     } catch (error) {
       return { status: 'Comment not removed successfully' };
     }
+  }
+
+  @ResolveField(() => User)
+  user(@Parent() comment: Comment) {
+    return this.userService.findOne(comment.user.id);
   }
 }
