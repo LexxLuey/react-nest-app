@@ -17,6 +17,10 @@ input UpdateCommentInput {
   content: String
 }
 
+type StatusResponse {
+  status: String!
+}
+
 type Query {
   comments: [Comment]!
   comment(id: String!): Comment
@@ -25,5 +29,5 @@ type Query {
 type Mutation {
   createComment(createCommentInput: CreateCommentInput!): Comment!
   updateComment(id: String!, updateCommentInput: UpdateCommentInput!): Comment!
-  removeComment(id: String!): Comment
+  removeComment(id: String!): StatusResponse
 }

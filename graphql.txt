@@ -1,0 +1,168 @@
+mutation {
+  seedUsers {
+    id
+    username
+    email
+    created_at
+  }
+}
+
+mutation {
+  createPost(createPostInput: {
+    title: "My First Post",
+    content: "This is the content of my first post.",
+    userId: "user-id"
+  }) {
+    id
+    title
+    content
+    user {
+      id
+      username
+    }
+    created_at
+    updated_at
+  }
+}
+
+query {
+  posts {
+    id
+    title
+    content
+    user {
+      id
+      username
+    }
+    comments {
+      id
+      content
+    }
+    created_at
+    updated_at
+  }
+}
+
+query {
+  post(id: "post-id") {
+    id
+    title
+    content
+    user {
+      id
+      username
+    }
+    comments {
+      id
+      content
+    }
+    created_at
+    updated_at
+  }
+}
+
+mutation {
+  updatePost(id: "post-id", updatePostInput: {
+    title: "Updated Title",
+    content: "Updated content of the post."
+  }) {
+    id
+    title
+    content
+    user {
+      id
+      username
+    }
+    created_at
+    updated_at
+  }
+}
+
+mutation {
+  removePost(id: "post-id") {
+    id
+    title
+    content
+  }
+}
+
+mutation {
+  createComment(createCommentInput: {
+    content: "This is a comment.",
+    userId: "user-id",
+    postId: "post-id"
+  }) {
+    id
+    content
+    user {
+      id
+      username
+    }
+    post {
+      id
+      title
+    }
+    created_at
+    updated_at
+  }
+}
+
+query {
+  comments {
+    id
+    content
+    user {
+      id
+      username
+    }
+    post {
+      id
+      title
+    }
+    created_at
+    updated_at
+  }
+}
+
+query {
+  comment(id: "comment-id") {
+    id
+    content
+    user {
+      id
+      username
+    }
+    post {
+      id
+      title
+    }
+    created_at
+    updated_at
+  }
+}
+
+mutation {
+  updateComment(id: "comment-id", updateCommentInput: {
+    content: "Updated content of the comment."
+  }) {
+    id
+    content
+    user {
+      id
+      username
+    }
+    post {
+      id
+      title
+    }
+    created_at
+    updated_at
+  }
+}
+
+mutation {
+  removeComment(id: "comment-id") {
+    id
+    content
+  }
+}

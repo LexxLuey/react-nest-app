@@ -37,4 +37,9 @@ export class UsersResolver {
   removeUser(@Args('id') id: string): Promise<User> {
     return this.userService.remove(id);
   }
+
+  @Mutation(() => [User])
+  seedUsers(): Promise<User[]> {
+    return this.userService.seedUsers();
+  }
 }

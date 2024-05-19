@@ -32,6 +32,7 @@ import { UsersService } from './users/users.service';
       password: process.env.MYSQL_ROOT_PASSWORD,
       database: process.env.MYSQL_DATABASE,
       entities: [User, Post, Comment],
+      synchronize: true,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
