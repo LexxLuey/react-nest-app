@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
+import { faker } from '@faker-js/faker';
 
 @Injectable()
 export class UsersService {
@@ -45,5 +46,25 @@ export class UsersService {
   async remove(id: string): Promise<User> {
     const user = await this.findOne(id);
     return this.userRepository.remove(user);
+  }
+
+  async seedUsers(): Promise<User[]> {
+    const usersToAdd = [];
+    while (usersToAdd.length < 10) {
+      const randomUser: CreateUserInput = {
+        username: faker.internet.userName(),
+        email: faker.internet.email(),
+        password: 'password',
+      };
+      try {
+        const newUser = await this.userRepository.create(randomUser);
+        const user = this.userRepository.save(newUser);
+        usersToAdd.push(user);
+        Logger.log(`User ${newUser.username} seeded successfully`);
+      } catch (error) {
+        Logger.error(`Error seeding User: ${error.message}`, error.stack);
+      }
+    }
+    return usersToAdd;
   }
 }

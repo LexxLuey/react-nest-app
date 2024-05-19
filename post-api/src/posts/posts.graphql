@@ -8,6 +8,26 @@ type Post {
   updated_at: String!
 }
 
+type Comment {
+  id: String!
+  content: String!
+  user: User!
+  post: Post!
+  created_at: String!
+  updated_at: String!  
+}
+
+type User {
+  id: String!
+  username: String!
+  email: String!
+  password: String!
+  posts: [Post]
+  comments: [Comment]
+  created_at: String!
+  updated_at: String!
+}
+
 input CreatePostInput {
   title: String!
   content: String!
@@ -19,6 +39,10 @@ input UpdatePostInput {
   content: String
 }
 
+type StatusResponse {
+  status: String!
+}
+
 type Query {
   posts: [Post]!
   post(id: String!): Post
@@ -27,5 +51,5 @@ type Query {
 type Mutation {
   createPost(createPostInput: CreatePostInput!): Post!
   updatePost(id: String!, updatePostInput: UpdatePostInput!): Post!
-  removePost(id: String!): Post
+  removePost(id: String!): StatusResponse!
 }

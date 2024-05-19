@@ -50,6 +50,10 @@ export class Comment {
     updated_at: string;
 }
 
+export class StatusResponse {
+    status: string;
+}
+
 export abstract class IQuery {
     abstract comments(): Nullable<Comment>[] | Promise<Nullable<Comment>[]>;
 
@@ -69,19 +73,21 @@ export abstract class IMutation {
 
     abstract updateComment(id: string, updateCommentInput: UpdateCommentInput): Comment | Promise<Comment>;
 
-    abstract removeComment(id: string): Nullable<Comment> | Promise<Nullable<Comment>>;
+    abstract removeComment(id: string): Nullable<StatusResponse> | Promise<Nullable<StatusResponse>>;
 
     abstract createPost(createPostInput: CreatePostInput): Post | Promise<Post>;
 
     abstract updatePost(id: string, updatePostInput: UpdatePostInput): Post | Promise<Post>;
 
-    abstract removePost(id: string): Nullable<Post> | Promise<Nullable<Post>>;
+    abstract removePost(id: string): StatusResponse | Promise<StatusResponse>;
 
     abstract createUser(createUserInput: CreateUserInput): User | Promise<User>;
 
     abstract updateUser(updateUserInput: UpdateUserInput): User | Promise<User>;
 
     abstract removeUser(id: string): Nullable<User> | Promise<Nullable<User>>;
+
+    abstract seedUsers(): Nullable<User>[] | Promise<Nullable<User>[]>;
 }
 
 export class Post {

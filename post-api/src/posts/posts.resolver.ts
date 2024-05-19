@@ -1,34 +1,62 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { PostsService } from './posts.service';
 import { CreatePostInput } from './dto/create-post.input';
 import { UpdatePostInput } from './dto/update-post.input';
+import { Post } from './entities/post.entity';
+import { StatusResponse } from 'src/status-response.type';
+import { CommentsService } from 'src/comments/comments.service';
 
 @Resolver('Post')
 export class PostsResolver {
-  constructor(private readonly postsService: PostsService) {}
+  constructor(
+    private readonly postService: PostsService,
+    private readonly commentService: CommentsService,
+  ) {}
 
-  @Mutation('createPost')
-  create(@Args('createPostInput') createPostInput: CreatePostInput) {
-    return this.postsService.create(createPostInput);
+  @Query(() => [Post], { nullable: true })
+  async posts(): Promise<Post[]> {
+    return this.postService.findAll();
   }
 
-  @Query('posts')
-  findAll() {
-    return this.postsService.findAll();
+  @Query(() => Post, { nullable: true })
+  async post(@Args('id') id: string): Promise<Post> {
+    return this.postService.findOne(id);
   }
 
-  @Query('post')
-  findOne(@Args('id') id: number) {
-    return this.postsService.findOne(id);
+  @Mutation(() => Post)
+  async createPost(
+    @Args('createPostInput') createPostInput: CreatePostInput,
+  ): Promise<Post> {
+    return this.postService.create(createPostInput);
   }
 
-  @Mutation('updatePost')
-  update(@Args('updatePostInput') updatePostInput: UpdatePostInput) {
-    return this.postsService.update(updatePostInput.id, updatePostInput);
+  @Mutation(() => Post)
+  async updatePost(
+    @Args('id') id: string,
+    @Args('updatePostInput') updatePostInput: UpdatePostInput,
+  ): Promise<Post> {
+    return this.postService.update(id, updatePostInput);
   }
 
-  @Mutation('removePost')
-  remove(@Args('id') id: number) {
-    return this.postsService.remove(id);
+  @Mutation(() => Post)
+  async removePost(@Args('id') id: string): Promise<StatusResponse> {
+    try {
+      this.postService.remove(id);
+      return { status: 'Post removed successfully' };
+    } catch (error) {
+      return { status: 'Post not removed successfully' };
+    }
+  }
+
+  @ResolveField(() => [Comment])
+  comments(@Parent() post: Post) {
+    return this.commentService.findByPostId(post.id);
   }
 }
